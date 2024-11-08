@@ -1,0 +1,105 @@
+// 1ere methode
+ALGORITHM SORT_ARR
+VAR
+    arr, arr2 : ARRAY_OF_INTEGER[100];  // Tableau principal et un autre tableau de type entier de taille 100
+    key : INTEGER;                      // La clé, un entier à insérer dans le tableau
+
+BEGIN
+    // Tri par insertion pour trier le tableau `arr`
+    FOR (int i := 0, i < arr.length, i++) DO
+        aux := arr[i];                  // Stocker l'élément actuel dans `aux` pour le positionner plus tard
+        j := i - 1;                     // Initialiser `j` à l'index de l'élément précédant `i`
+
+        // Déplacer les éléments de la partie triée du tableau qui sont plus grands que `aux`
+        WHILE (j >= 0 AND aux < arr[j]) DO
+            arr[j + 1] := arr[j];       // Décaler l'élément `arr[j]` d'une position vers la droite
+            j := j - 1;                 // Décrémenter `j` pour continuer à vérifier les éléments de gauche
+        END_WHILE
+
+        arr[j + 1] := aux;              // Placer `aux` à sa position correcte dans la partie triée
+    END_FOR
+
+    // Insertion de `key` dans le tableau trié `arr` à la position appropriée
+    i := 0;                             // Réinitialiser `i` à 0
+    j := i + 1;                         // Initialiser `j` à `i + 1`
+
+    // Parcourir le tableau pour insérer `key`
+    FOR i FROM 0 TO arr.length - 1 DO
+        IF (arr[i] < key AND arr[j] >= key) THEN // Trouver la position où `key` doit être inséré
+            n := arr.length;                     // Commencer à la fin du tableau
+
+            // Décaler les éléments vers la droite pour créer un espace pour `key`
+            WHILE (n > j) DO
+                arr[n] := arr[n - 1];            // Décaler l'élément de `n-1` vers `n`
+                n := n - 1;                      // Décrémenter `n` pour continuer le décalage
+            END_WHILE
+
+            arr[j] := key;                       // Insérer `key` à la position `j`
+        END_IF
+    END_FOR
+END
+
+
+// 2eme methode
+ALGORITHM SORT_ARR
+VAR
+    arr : ARRAY_OF_INTEGER[100];  // Le tableau à trier
+    key, aux : INTEGER;           // aux stocke l'élément actuel dans le tri par insertion; key est un élément à insérer éventuellement plus tard
+    i, j, n : INTEGER;            // i et j sont des compteurs de boucle; n est utilisé pour décaler les éléments lors de l'insertion de key
+    
+BEGIN
+    // Tri par insertion pour trier le tableau en ordre croissant
+    FOR i := 1 TO arr.length - 1 DO
+        aux := arr[i];         // Stocker l'élément actuel à positionner dans la partie triée
+        j := i - 1;            // Commencer à comparer à partir du dernier élément trié
+
+        // Boucle interne pour déplacer les éléments plus grands que aux d'une position vers la droite
+        WHILE (j >= 0 AND aux < arr[j]) DO
+            arr[j + 1] := arr[j];   // Décaler l'élément arr[j] vers la droite
+            j := j - 1;             // Avancer vers la gauche dans la partie triée
+        END_WHILE
+
+        arr[j + 1] := aux;      // Placer aux à sa position correcte dans la partie triée
+    END_FOR
+
+    // Optionnel : Insérer un nouvel élément 'key' dans le tableau trié
+    // Cela suppose que 'key' est une valeur que nous voulons insérer tout en maintenant le tableau trié
+    FOR i := 0 TO arr.length - 1 DO
+        // Vérifier si l'élément actuel est supérieur à key, ce qui signifie que c'est le point d'insertion
+        IF (arr[i] > key) THEN
+            // Décaler les éléments vers la droite à partir de la fin du tableau pour faire de la place pour key
+            n := arr.length - 1;    // Commencer à partir du dernier élément du tableau
+            WHILE (n > i) DO
+                arr[n] := arr[n - 1];  // Déplacer chaque élément d'une position vers la droite
+                n := n - 1;            // Avancer vers la gauche pour l'élément suivant
+            END_WHILE
+
+            arr[i] := key;       // Insérer key à la position correcte dans le tableau trié
+            EXIT FOR;            // Sortir de la boucle car key a été inséré
+        END_IF
+    END_FOR
+END
+
+
+
+// Explication des commentaires
+// Les commentaires décrivent chaque étape de l'algorithme, comme le tri par insertion et l'insertion de la clé key dans le tableau trié.
+// La section Tri par insertion trie le tableau arr en ordre croissant en déplaçant les éléments plus grands que aux pour faire de la place.
+// La section Insertion de la clé explique comment insérer key à sa position correcte dans le tableau trié, en décalant les éléments nécessaires.
+// Section de Tri par Insertion :
+
+// L'algorithme commence par trier le tableau arr en utilisant le tri par insertion. La boucle FOR itère sur chaque élément, en commençant par le deuxième élément (i = 1), car le premier élément est déjà considéré comme trié. Pour chaque élément arr[i], nous :
+
+// Le stockons dans aux, qui contient temporairement la valeur pendant que nous trouvons sa position correcte.
+// Définissons j comme étant i - 1, ce qui pointe vers le dernier élément de la partie triée.
+// La boucle WHILE interne :
+
+// Décale les éléments vers la droite s'ils sont plus grands que aux, créant ainsi un espace pour aux à sa position correcte.
+// S'arrête lorsqu'elle trouve un élément qui n'est pas plus grand que aux ou atteint le début du tableau. Finalement, aux est placé à arr[j + 1], qui est la position correcte dans la partie triée.
+// Section d'Insertion de Clé Optionnelle :
+
+// Cette partie de l'algorithme est utilisée pour insérer un nouvel élément (key) dans le tableau trié, tout en maintenant l'ordre trié. La boucle FOR externe itère à travers le tableau pour trouver la position correcte pour key. Lorsque arr[i] > key, la boucle WHILE :
+
+// Décale les éléments vers la droite en commençant par la fin (arr.length - 1) jusqu'à la position i pour créer de l'espace.
+// Déplace chaque élément d'une position vers la droite jusqu'à atteindre i. Après le décalage, key est inséré à arr[i]. L'instruction EXIT FOR arrête la boucle une fois que key a été inséré, rendant les itérations supplémentaires inutiles.
+// Ce code implémente efficacement le tri par insertion et montre comment insérer une nouvelle valeur dans un tableau trié tout en maintenant l'ordre trié
